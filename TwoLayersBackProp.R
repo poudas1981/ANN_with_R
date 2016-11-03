@@ -1,7 +1,4 @@
 
-.libPaths(new = "/work/statsgeneral/vcdim/Code/packages")
-.libPaths() #Check to see it is #1 in the search path
-
 ####################################################################
 # Install R library for decision tree
 ####################################################################
@@ -24,7 +21,7 @@ for (i in names(data)[1:(ncol(data)-1)]) {
 }
 set.seed(124)
 #data = iris
-
+# Randomization and divide the the data into training and testing set
 Index = sample(1:nrow(data), size = nrow(data)/2, replace = FALSE)
 test_data = data[Index,-ncol(data)]
 y_test = data[Index,ncol(data)]
@@ -38,14 +35,15 @@ test_data_tree = data[Index,]
 train_data_tree = data[-Index,]
 
 
-
+# The activation function
 sigmoid = function(z){
   1/(1+exp(-z))
 }
+# The derivative of the activation function
 derivsigmoid = function(z){
   sigmoid(z)*(1-sigmoid(z))
 }
-
+# The foraward part of ANN
 Forward = function(W,B,V,x){
   TT = W%*%t(x)
   Z = sigmoid(TT)
@@ -80,7 +78,7 @@ XMat = function(train_data, rows, coltype){
   x = matrix(x, nrow = 1, byrow = TRUE)
   
 }
-
+# create a vector of target attribute
 target = function(y_train, rows){
   if(length(unique(y_train)) == 2){
     r = y_train[rows]
@@ -120,7 +118,7 @@ Accuracy = function(W,B,V, test_data, y_test, cutoff=0.5)
 # first derivative
 M = 10 # number of hidden unit in the first layer
 H = 10 # number of hidden unit in the second layer
-
+# Back propagation
 TwoLayers_ANN = function(train_data, y_train, test_data, y_test,Maxcounter, cutacc = 0.8,eta=0.03, M=20, H=20)
 {
   coltype = apply(train_data, MARGIN = 2, FUN = is.numeric)
@@ -268,7 +266,7 @@ folds <- cut(seq(1,nrow(data)),breaks=10,labels=FALSE)
 ErrorMat = matrix(NA, ncol = 2, nrow = 10)
 for(i in 1:10){
   
-  #Segement your data by fold using the which() function 
+  #Segment your data by fold using the which() function 
   testIndexes <- which(folds==i,arr.ind=TRUE)
   Mytestdata = data[testIndexes,-ncol(data)]
   ytest = data[testIndexes,ncol(data)]
